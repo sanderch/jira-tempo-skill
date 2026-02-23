@@ -1,6 +1,6 @@
 ---
 name: jira-tempo
-description: Parse a Jira activity RSS/Atom feed and estimate hours spent per Jira ticket per day. Use this skill when the user wants to: (1) extract activity events (date, ticket, action, description) from a Jira activity feed file into a structured CSV, (2) estimate time spent per ticket based on activity volume and type, or (3) prepare a time-tracking report from Jira activity for Tempo or similar timesheet tools. Expects activity.txt downloaded from the Jira activity stream API.
+description: "Parse a Jira activity RSS/Atom feed and estimate hours spent per Jira ticket per day. Use this skill when the user wants to: (1) extract activity events (date, ticket, action, description) from a Jira activity feed file into a structured CSV, (2) estimate time spent per ticket based on activity volume and type, or (3) prepare a time-tracking report from Jira activity for Tempo or similar timesheet tools. Expects activity.txt downloaded from the Jira activity stream API."
 ---
 
 # Jira Tempo
