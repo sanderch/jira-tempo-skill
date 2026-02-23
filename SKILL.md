@@ -9,13 +9,16 @@ Parse a Jira activity feed into structured CSVs, then estimate hours spent per t
 
 ## Setup
 
-Download the Jira activity feed and save as `activity.txt`:
+The input file `activity.txt` is the raw Jira activity RSS/Atom feed. The easiest way to get it is directly from the browser:
 
-```
-https://<your-jira-domain>/activity?maxResults=500&streams=user+IS+<username>&os_authType=basic
-```
+1. Log in to Jira in your browser.
+2. Open this URL (replace `<your-jira-domain>` and `<username>`):
+   ```
+   https://<your-jira-domain>/activity?maxResults=500&streams=user+IS+<username>&os_authType=basic
+   ```
+3. The browser will display raw XML. Save the page as `activity.txt` (File → Save As → All Files / Plain Text) in the repo folder.
 
-Or with curl:
+Alternatively, use curl:
 
 ```bash
 curl -u <username>:<password> -o activity.txt \
