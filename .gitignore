@@ -1,0 +1,16 @@
+# Personal Jira data — never commit these
+activity.txt
+activity_parsed.csv
+time_estimates.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
