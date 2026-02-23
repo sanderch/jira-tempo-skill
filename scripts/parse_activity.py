@@ -5,13 +5,12 @@ Parses a Jira activity RSS/Atom feed and extracts:
   - Ticket title/summary
   - Activity type and description of what was done
 
-Usage:
-    python parse_activity.py [input_file] [output_file]
+Usage (run from repo root):
+    python scripts/parse_activity.py [input_file] [output_file]
     Defaults: activity.txt  activity_parsed.csv
 
-To download the feed for a user:
+Download the feed from:
     https://<your-jira-domain>/activity?maxResults=500&streams=user+IS+<username>&os_authType=basic
-Save the page as activity.txt before running this script.
 """
 
 import re
@@ -19,7 +18,7 @@ import html
 import csv
 import sys
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime
 
 # Ensure the terminal can output UTF-8 (Jira data may contain non-ASCII chars)
 if hasattr(sys.stdout, 'reconfigure'):
@@ -41,17 +40,14 @@ def strip_html(text: str) -> str:
 
 def derive_activity_type(entry, verbs: list[str], categories: list[str]) -> str:
     """Return a human-readable activity type label."""
-    # Category gives the most specific info for transitions / comments / created
     if categories:
         cat = categories[0].strip()
         if cat.lower() == 'comment':
             return 'Commented'
         if cat.lower() == 'created':
             return 'Created'
-        # status transitions: term contains the target status name
         return f'Status -> {cat}'
 
-    # Fall back to activity verb
     for v in verbs:
         if v.endswith('/post'):
             return 'Created / Posted'
@@ -94,7 +90,6 @@ def parse_entries(filepath: str) -> list[dict]:
     results = []
 
     for entry in root.findall('atom:entry', NS):
-        # ── Date ────────────────────────────────────────────────────────────
         pub_node = entry.find('atom:published', NS)
         raw_date = pub_node.text if pub_node is not None else ''
         try:
@@ -103,21 +98,16 @@ def parse_entries(filepath: str) -> list[dict]:
         except ValueError:
             date_str = raw_date
 
-        # ── Activity verbs & categories ──────────────────────────────────────
         verbs      = [v.text or '' for v in entry.findall('activity:verb', NS)]
         categories = [c.get('term', '') for c in entry.findall('atom:category', NS)]
 
         activity_type = derive_activity_type(entry, verbs, categories)
-
-        # ── Ticket info ──────────────────────────────────────────────────────
         issue_key, issue_summary = get_issue_info(entry)
 
-        # ── Human-readable description from <title> ──────────────────────────
         title_node = entry.find('atom:title', NS)
         title_html = title_node.text if title_node is not None else ''
         description = strip_html(title_html)
 
-        # If still no issue key, fall back to parsing the title HTML
         if not issue_key:
             m = re.search(r'browse/([A-Z]+-\d+)', title_html or '')
             if m:
@@ -171,7 +161,6 @@ def main():
     input_file = 'activity.txt'
     output_csv = None
 
-    # Simple arg handling: python parse_activity.py [input] [output.csv]
     if len(sys.argv) >= 2:
         input_file = sys.argv[1]
     if len(sys.argv) >= 3:
@@ -184,7 +173,6 @@ def main():
     if output_csv:
         write_csv(entries, output_csv)
     else:
-        # Auto-write CSV alongside the script
         write_csv(entries, 'activity_parsed.csv')
 
 
