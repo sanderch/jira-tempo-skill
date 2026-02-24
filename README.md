@@ -1,6 +1,6 @@
 # jira-tempo-skill
 
-Two small Python scripts that turn your **Jira activity RSS feed** into a time-tracking CSV — no third-party packages required.
+Two small Python scripts that parse your **Jira activity RSS feed** into a structured CSV and estimate hours spent per ticket per day — ready to log in **Tempo** or any timesheet tool. No third-party packages required.
 
 | Script | Input | Output |
 |---|---|---|
